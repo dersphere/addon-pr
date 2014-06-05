@@ -66,7 +66,10 @@ class Addon(object):
     def _parse(self):
         """Parse the addon.xml"""
         requires = self._root.find('requires')
-        self.dependencies = [elt.attrib for elt in list(requires)]
+        try:
+            self.dependencies = [elt.attrib for elt in list(requires)]
+        except TypeError:
+            raise ValueError("Malformed addon.xml, 'requires' missing")
         for ext in self._root.iter('extension'):
             if ext.get('point') == 'xbmc.addon.metadata':
                 self.metadata = self._get_metadata(ext)
